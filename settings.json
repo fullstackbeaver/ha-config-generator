@@ -1,17 +1,4 @@
-[
-  {
-    "file": "switches_dmx.yaml",
-    "template": "switch",
-    "devices": [
-      {
-        "type": "switches",
-        "rooms": [
-          {
-            "mane": "kitchen",
-            "max": 10
-          }
-        ]
-      }
-    ]
-  }
-]
+{
+  "sourceCSV" : "/csv",
+  "configExportFolder": "/config"
+}
