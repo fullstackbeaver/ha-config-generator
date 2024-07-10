@@ -1,0 +1,19 @@
+{
+  "name": "ha-config-generator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "FSB",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "n-readlines": "^1.0.1"
+  },
+  "devDependencies": {
+    "farm": "^0.0.1",
+    "typescript": "^5.5.3"
+  }
+}
