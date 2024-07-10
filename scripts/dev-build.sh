@@ -4,4 +4,4 @@
 
 # Run the project
 echo "run project"
-node dist/index.js
+node dist/src/main.js
