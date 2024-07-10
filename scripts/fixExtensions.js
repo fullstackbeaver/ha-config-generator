@@ -25,7 +25,7 @@ function updateFileContent(fileContent) {
   const lines = fileContent.split('\n');
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (line.startsWith('import') && line.includes('from ".')) {
+    if (line.startsWith('import') && line.includes('from ".') && !line.includes('.json"')) {
       // Find the last double quote
       const lastDoubleQuoteIndex = line.lastIndexOf('"');
 
@@ -43,4 +43,4 @@ function updateFileContent(fileContent) {
     : false;
 }
 
-parseDirectoryAndUpdateFiles(process.cwd() + "/dist/src")
+parseDirectoryAndUpdateFiles(process.cwd() + "/dist")
