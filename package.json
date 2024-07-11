@@ -4,7 +4,8 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "buildOrig": "rollup -c && rimraf ./bin/dist",
+    "final-build": "rollup -c && rimraf ./bin/dist",
+    "final-build-and-run":"npm run final-build && node ha-config-generator.js",
     "build-dev":"./scripts/dev-build.sh",
     "test": "./scripts/tests.sh"
   },
