@@ -1,23 +1,32 @@
-import { accessSync, constants, readdirSync, readFileSync,  unlinkSync, writeFileSync } from "fs";
-import { join }                                                           from "path";
-import LineByLine                                                         from "n-readlines";
-import type { CSVRow, HomeAssistantTypes } from "../core/csvToHaConfig.d";
+import type { CSVRow, Transcribers }                                            from "../core/csvToHaConfig.d";
+import      { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
+import      { join }                                                            from "path";
+import      LineByLine                                                          from "n-readlines";
+import      { normalizeString }                                                 from "../adapters/string";
 
-const configPath = "config/";
+
+const { configExportFolder, sourceCSV } = await readJsonFile("settings.json") as { configExportFolder: string, sourceCSV: string };
 
 /**
  * Writes the given data to a file in the specified filename.
  *
- * @param  {HomeAssistantTypes} fileName - the fiole name with its path where the JSON file will be written
- * @param  {string} data     - the data to be written to the JSON file
+ * @param  {keyof Transcribers} fileName - the fiole name with its path where the JSON file will be written
+ * @param  {string}             data     - the data to be written to the JSON file
  *
  * @return {void}
  */
-export function writeFile(fileName: keyof HomeAssistantTypes, data: string): void {
-  writeFileSync(join(__dirname, configPath, fileName.toString().toLowerCase()+".yaml"), data);
+export function writeFile(fileName: keyof Transcribers, data: string): void {
+  const folder = join(process.cwd(), configExportFolder);
+  !existsSync(folder) && mkdirSync(folder);
+  writeFileSync(join(process.cwd(), configExportFolder, fileName.toString().toLowerCase()+".yaml"), data);
 }
 
-
+/**
+ * Reads all files in the specified folder.
+ *
+ * @param {string} folderPath - The path of the folder to read.
+ * @return {Promise<string[]>} An array of file names in the folder.
+ */
 export function readFilesInFolder(folderPath: string): string[] {
   try {
     const files = readdirSync(folderPath);
@@ -29,24 +38,45 @@ export function readFilesInFolder(folderPath: string): string[] {
 }
 
 
+/**
+ * Asynchronously converts a CSV file to an array of CSVRow objects.
+ *
+ * @param {string} filePath  - The path of the CSV file to convert.
+ * @return {Promise<CSVRow[]>} The array of CSVRow objects parsed from the CSV file.
+ */
 export async function convertCSV(filePath: string): Promise<CSVRow[]> {
-  const lines = new LineByLine(filePath);
-  const data: CSVRow[] = [];
+  const data   = [] as CSVRow[];
+  const lines  = new LineByLine(process.cwd()+sourceCSV+"/"+filePath);
+  let   titles = [] as string[];
+  let   line;
 
-  // Read each line
-  let line;
-  while ((line = await lines.next()) !== undefined) {
-    const row = line.toString().split(",");
+  while (line = lines.next()) {  // eslint-disable-line no-cond-assign
+    const row = line
+      .toString()
+      .replace('\r', '')
+      .split(",");
 
-    // Parse each field (assuming comma separation)
-    const parsedRow: CSVRow = {};
-    for (let i = 0; i < row.length; i++) {
-      // Remove leading/trailing spaces and quotes (optional)
-      parsedRow[i.toString()] = row[i].trim().replace(/^"|"$|^'|'$/g, "");
+    if (titles.length === 0) {
+      titles = row.map(normalizeString);
+      continue;
     }
 
+    const parsedRow = {} as CSVRow;
+    for (let i = 0; i < titles.length; i++) {
+      parsedRow[titles[i] as keyof CSVRow] = row[i];
+    }
     data.push(parsedRow);
   }
-
   return data;
+}
+
+/**
+ * Reads and parses a JSON file from the given path.
+ *
+ * @param   {string} fileNameWithRelativePath - The path to the JSON file.
+ *
+ * @returns {Promise<T>} - A promise that resolves to the parsed JSON content.
+ */
+export async function readJsonFile<T>(fileNameWithRelativePath: string): Promise<T> {
+  return await JSON.parse(readFileSync(join(process.cwd(), fileNameWithRelativePath), "utf8"));
 }

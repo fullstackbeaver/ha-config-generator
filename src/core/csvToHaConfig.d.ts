@@ -1,37 +1,41 @@
-export type HomeAssistantTypes = "Alarm control panel"
-| "Binary sensor"
-| "Button"
-| "Camera"
-| "Cover"
-| "Device tracker"
-| "Device trigger"
-| "Event"
-| "Fan"
-| "Humidifier"
-| "Image"
-| "HVAC"
-| "Lawn mower"
-| "Light"
-| "Lock"
-| "Number"
-| "Scene"
-| "Select"
-| "Sensor"
-| "Siren"
-| "Switch"
-| "Update"
-| "Tag scanner"
-| "Text"
-| "Vacuum"
-| "Valve"
-| "Water heater"
-
 export type TranscribeFunction = (args: CSVRow) => string
 
 export interface CSVRow {
-  [key: string]: string | number;
+  adresse_dmx?: string
+  nom         : string
+  piece       : string
+  piece_abbr  : string
+  type        : string
+  type_abbr   : string
+  zone        : string
 }
 
 export type Transcribers = {
-  [key in keyof HomeAssistantTypes]: TranscribeFunction;
-};
+  "Alarm control panel"?: TranscribeFunction
+  "Binary sensor"      ?: TranscribeFunction
+  "Button"             ?: TranscribeFunction
+  "Camera"             ?: TranscribeFunction
+  "Cover"               : TranscribeFunction
+  "Device tracker"     ?: TranscribeFunction
+  "Device trigger"     ?: TranscribeFunction
+  "Event"              ?: TranscribeFunction
+  "Fan"                ?: TranscribeFunction
+  "Humidifier"         ?: TranscribeFunction
+  "Image"              ?: TranscribeFunction
+  "HVAC"               ?: TranscribeFunction
+  "Lawn mower"         ?: TranscribeFunction
+  "Light"               : TranscribeFunction
+  "Lock"               ?: TranscribeFunction
+  "Number"             ?: TranscribeFunction
+  "Scene"              ?: TranscribeFunction
+  "Select"             ?: TranscribeFunction
+  "Sensor"             ?: TranscribeFunction
+  "Siren"              ?: TranscribeFunction
+  "Switch"              : TranscribeFunction
+  "Update"             ?: TranscribeFunction
+  "Tag scanner"        ?: TranscribeFunction
+  "Text"               ?: TranscribeFunction
+  "Vacuum"             ?: TranscribeFunction
+  "Valve"              ?: TranscribeFunction
+  "Water heater"       ?: TranscribeFunction
+}
