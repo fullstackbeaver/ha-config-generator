@@ -1,13 +1,15 @@
 export type TranscribeFunction = (args: CSVRow) => string
 
 export interface CSVRow {
-  adresse_dmx?: string
-  nom         : string
-  piece       : string
-  piece_abbr  : string
-  type        : string
-  type_abbr   : string
-  zone        : string
+  DMX       ?: string
+  area      ?: string
+  max       ?: string
+  name      ?: string
+  room      ?: string
+  room_abbr ?: string
+  transition?: string
+  type       : string
+  type_abbr  : string
 }
 
 export type Transcribers = {
@@ -15,7 +17,7 @@ export type Transcribers = {
   "Binary sensor"      ?: TranscribeFunction
   "Button"             ?: TranscribeFunction
   "Camera"             ?: TranscribeFunction
-  "Cover"               : TranscribeFunction
+  "Cover"              ?: TranscribeFunction
   "Device tracker"     ?: TranscribeFunction
   "Device trigger"     ?: TranscribeFunction
   "Event"              ?: TranscribeFunction
@@ -24,7 +26,7 @@ export type Transcribers = {
   "Image"              ?: TranscribeFunction
   "HVAC"               ?: TranscribeFunction
   "Lawn mower"         ?: TranscribeFunction
-  "Light"               : TranscribeFunction
+  "Light"              ?: TranscribeFunction
   "Lock"               ?: TranscribeFunction
   "Number"             ?: TranscribeFunction
   "Scene"              ?: TranscribeFunction

@@ -1,11 +1,11 @@
-import type { CSVRow, Transcribers }                                            from "../core/csvToHaConfig.d";
+import type { CSVRow, TranscribeFunction, Transcribers }                                            from "../core/csvToHaConfig.d";
 import      { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import      { join }                                                            from "path";
 import      LineByLine                                                          from "n-readlines";
-import      { normalizeString }                                                 from "../adapters/string";
+// import      { normalizeString }                                                 from "../adapters/string"; //TODO remove
 
 
-const { configExportFolder, sourceCSV } = await readJsonFile("settings.json") as { configExportFolder: string, sourceCSV: string };
+const { configExportFolder, sourceCSV, sourceTemplates } = await readJsonFile("settings.json") as { configExportFolder: string, sourceCSV: string, sourceTemplates:string };
 
 /**
  * Writes the given data to a file in the specified filename.
@@ -57,7 +57,7 @@ export async function convertCSV(filePath: string): Promise<CSVRow[]> {
       .split(",");
 
     if (titles.length === 0) {
-      titles = row.map(normalizeString);
+      titles = row; //.map(normalizeString);
       continue;
     }
 
@@ -79,4 +79,17 @@ export async function convertCSV(filePath: string): Promise<CSVRow[]> {
  */
 export async function readJsonFile<T>(fileNameWithRelativePath: string): Promise<T> {
   return await JSON.parse(readFileSync(join(process.cwd(), fileNameWithRelativePath), "utf8"));
+}
+
+export async function importTemplates(){
+  const templates          = {} as Transcribers;
+  const sourceTemplatesDir = join(process.cwd(), "/dist", sourceTemplates);
+  const files              = readFilesInFolder(sourceTemplatesDir)
+    .filter(file => file.endsWith(".js"));
+  for (const file of files) {
+    const type      = file.split(".")[0] as keyof Transcribers;
+    const imported  = await import(sourceTemplatesDir+"/"+file) as {default:TranscribeFunction};
+    templates[type] = imported.default;
+  }
+  return templates;
 }

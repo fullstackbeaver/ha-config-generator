@@ -1,4 +1,5 @@
 {
+  "configExportFolder": "/config",
   "sourceCSV" : "/csv",
-  "configExportFolder": "/config"
+  "sourceTemplates" : "/templates"
 }
