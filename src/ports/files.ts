@@ -2,7 +2,6 @@ import type { CSVRow, TranscribeFunction, Transcribers }                        
 import      { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import      { join }                                                            from "path";
 import      LineByLine                                                          from "n-readlines";
-// import      { normalizeString }                                                 from "../adapters/string"; //TODO remove
 
 
 const { configExportFolder, sourceCSV, sourceTemplates } = await readJsonFile("settings.json") as { configExportFolder: string, sourceCSV: string, sourceTemplates:string };
@@ -79,7 +78,7 @@ export async function convertCSV(filePath: string): Promise<CSVRow[]> {
  *
  * @returns {Promise<T>} - A promise that resolves to the parsed JSON content.
  */
-export async function readJsonFile<T>(fileNameWithRelativePath: string): Promise<T> {
+async function readJsonFile<T>(fileNameWithRelativePath: string): Promise<T> {
   return await JSON.parse(readFileSync(join(process.cwd(), fileNameWithRelativePath), "utf8"));
 }
 
