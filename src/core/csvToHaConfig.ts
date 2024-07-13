@@ -20,15 +20,10 @@ export function extractTypeFromCsvFileName(fileName: string): keyof Transcribers
     .trim() as keyof Transcribers;
 }
 
-export function defineUUID(block1: string, block2:string | undefined, area:string | undefined): string {
-  const id = [block1];
+export function defineUUID(block1: string |undefined, block2:string | undefined, area:string | undefined): string {
+  const id = [];
+  block1 && id.push(block1);
   block2 && id.push(block2);
   area   && id.push(area);
   return normalizeString(id.join("_"));
 }
-
-// export function defineUUID(type_abbr:string, room_abbr?:string, area?:string) {
-//   const idAsArray = [room_abbr, type_abbr]; //TODO reprendre ici si room_abbr est absent
-//   area && idAsArray.push(area);
-//   return idAsArray.join("_");
-// }

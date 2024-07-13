@@ -1,13 +1,10 @@
-import type { CSVRow }          from "../src/core/csvToHaConfig.d";
-import      { addDmx }          from "../src/core/dmx";
-import      { defineUUID }      from "../src/core/csvToHaConfig";
-import      { normalizeString } from "../src/adapters/string";
+import type { CSVRow }     from "../src/core/csvToHaConfig.d";
+import      { addDmx }     from "../src/core/dmx";
+import      { defineUUID } from "../src/core/csvToHaConfig";
 
 export default function lightTemplate ({DMX, area, max, name, room, room_abbr, transition, type, type_abbr}: CSVRow): string {
 
-  [area, room] = [area, room].map(normalizeString);
-  const id     = defineUUID(type_abbr, room_abbr, area);
-  name         = name ?? "";
+  const id = defineUUID(type_abbr, room_abbr, area);
 
   //register
   DMX && addDmx(id, parseInt(DMX), Boolean(transition), max ? parseInt(max) : 0);
@@ -15,12 +12,12 @@ export default function lightTemplate ({DMX, area, max, name, room, room_abbr, t
   return template({
     deviceId: defineUUID(room, type, area),
     id,
-    name,
+    name: name ?? "",
     uuid: defineUUID(type, room, area)
   });
 }
 
-function template({deviceId, id, name, uuid}:{deviceId:string, id:string, name:string, uuid:string}) {
+function template({deviceId, id, name, uuid}:{[key:string]:string}) {
   // /!\ BE AWARE of need tabulations in the template to respect yaml specifications
   return `
     ${deviceId}:
