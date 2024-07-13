@@ -1,3 +1,5 @@
+import { writeFile } from "../ports/files";
+
 type DmxEntry = {
   transition?: boolean
   max       ?: number
@@ -14,6 +16,5 @@ export function addDmx(id:string, dmxAddress:number, transition?:boolean, max?:n
 }
 
 export function generateDmxConfig() {
-  if (Object.keys(dmxJson).length > 0) return; //TODO remove
-  return dmxJson;
+  Object.keys(dmxJson).length > 0 && writeFile("dmx", dmxJson);
 }

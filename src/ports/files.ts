@@ -15,10 +15,12 @@ const { configExportFolder, sourceCSV, sourceTemplates } = await readJsonFile("s
  *
  * @return {void}
  */
-export function writeFile(fileName: keyof Transcribers, data: string): void {
+export function writeFile(fileName: string, data: string | object): void {
   const folder = join(process.cwd(), configExportFolder);
   !existsSync(folder) && mkdirSync(folder);
-  writeFileSync(join(process.cwd(), configExportFolder, fileName.toString().toLowerCase()+".yaml"), data);
+  typeof data !== "string"
+    ? writeFileSync(join(process.cwd(), configExportFolder, fileName.toString().toLowerCase()+".json"), JSON.stringify(data, null, 2))
+    : writeFileSync(join(process.cwd(), configExportFolder, fileName.toString().toLowerCase()+".yaml"), data);
 }
 
 /**

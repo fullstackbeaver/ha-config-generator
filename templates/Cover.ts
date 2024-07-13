@@ -17,28 +17,6 @@ export default function coverTemplate ({DMX, area, name, room, type, type_abbr, 
   });
 }
 
-// function templatea({deviceId, id, name, uuid}:{deviceId:string, id:string, name:string, uuid:string}) {
-//   // /!\ BE AWARE of need tabulations in the template to respect yaml specifications
-//   return `
-//     ${deviceId}:
-//       friendly_name: "${name}"
-//       unique_id: "${uuid}"
-//       turn_on:
-//         service: switch.turn_on
-//         data:
-//           entity_id: switch.${id}_switch
-//       turn_off:
-//         service: switch.turn_off
-//         data:
-//           entity_id: switch.${id}_switch
-//       set_level:
-//         service: light.turn_on
-//         data_template:
-//           entity_id: light.${id}
-//           brightness: "{{ brightness }}"
-// `;
-// }
-
 function template({deviceId, id, name, uuid}:{[key:string]:string}) {
   // /!\ BE AWARE of need tabulations in the template to respect yaml specifications
   return `
