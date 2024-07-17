@@ -9,8 +9,8 @@ export function normalizeString(str?: string): string {
     ? ""
     : str
       .trim()
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '')
-      .replace(/\s+/g, '_')
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .replace(/\s+/g, "_")
       .toLowerCase();
 }
