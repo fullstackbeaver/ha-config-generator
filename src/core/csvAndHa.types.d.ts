@@ -1,15 +1,16 @@
 export type TranscribeFunction = (args: CSVRow) => string
 
 export interface CSVRow {
-  DMX       ?: string
-  area      ?: string
-  max       ?: string
-  name      ?: string
-  room      ?: string
-  room_abbr ?: string
-  transition?: string
-  type       : string
-  type_abbr  : string
+  DMX          ?: string
+  DMX_active   ?: string
+  DMX_direction?: string
+  area         ?: string
+  max          ?: string
+  name         ?: string
+  room         ?: string
+  room_abbr    ?: string
+  type          : string
+  type_abbr     : string
 }
 
 export type Transcribers = {
