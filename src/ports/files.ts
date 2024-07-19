@@ -1,8 +1,7 @@
-import type { CSVRow, TranscribeFunction, Transcribers }                                            from "../core/csvToHaConfig.d";
-import      { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
-import      { join }                                                            from "path";
+import type { CSVRow, TranscribeFunction, Transcribers }                        from "../core/csvAndHa.types";
+import      { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "fs";
 import      LineByLine                                                          from "n-readlines";
-
+import      { join }                                                            from "path";
 
 const { configExportFolder, sourceCSV, sourceTemplates } = await readJsonFile("settings.json") as { configExportFolder: string, sourceCSV: string, sourceTemplates:string };
 
@@ -18,8 +17,8 @@ export function writeFile(fileName: string, data: string | object): void {
   const folder = join(process.cwd(), configExportFolder);
   !existsSync(folder) && mkdirSync(folder);
   typeof data !== "string"
-    ? writeFileSync(join(process.cwd(), configExportFolder, fileName.toString().toLowerCase()+".json"), JSON.stringify(data, null, 2))
-    : writeFileSync(join(process.cwd(), configExportFolder, fileName.toString().toLowerCase()+".yaml"), data);
+    ? writeFileSync(join(process.cwd(), configExportFolder, fileName.toLowerCase()+".json"), JSON.stringify(data, null, 2))
+    : writeFileSync(join(process.cwd(), configExportFolder, fileName.toLowerCase()+".yaml"), data);
 }
 
 /**
@@ -38,7 +37,6 @@ export function readFilesInFolder(folderPath: string): string[] {
   }
 }
 
-
 /**
  * Asynchronously converts a CSV file to an array of CSVRow objects.
  *
@@ -54,7 +52,7 @@ export async function convertCSV(filePath: string): Promise<CSVRow[]> {
   while (line = lines.next()) {  // eslint-disable-line no-cond-assign
     const row = line
       .toString()
-      .replace('\r', '')
+      .replace("\r", "")
       .split(",");
 
     if (titles.length === 0) {
@@ -82,6 +80,11 @@ async function readJsonFile<T>(fileNameWithRelativePath: string): Promise<T> {
   return await JSON.parse(readFileSync(join(process.cwd(), fileNameWithRelativePath), "utf8"));
 }
 
+/**
+ * Asynchronously imports templates from the specified source templates directory.
+ *
+ * @return {Promise<Transcribers>} A promise that resolves to an object containing the imported templates.
+ */
 export async function importTemplates(){
   const templates          = {} as Transcribers;
   const sourceTemplatesDir = join(process.cwd(), "/dist", sourceTemplates);

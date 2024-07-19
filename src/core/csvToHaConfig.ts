@@ -1,5 +1,5 @@
 import type { CSVRow, TranscribeFunction, Transcribers } from "./csvAndHa.types";
-import      { normalizeString }                          from "../adapters/string";
+import      { normalizeString }                          from "../helpers/string";
 
 /**
  * Converts CSV data to Home Assistant configuration based on the specified type and transcriber function.

@@ -1,20 +1,22 @@
-import type { CSVRow }     from "../src/core/csvToHaConfig.d";
+import type { CSVRow }     from "../src/core/csvAndHa.types";
 import      { addDmx }     from "../src/core/dmx";
 import      { defineUUID } from "../src/core/csvToHaConfig";
 
 export default function switchTemplate ({DMX, area, name, room, type, type_abbr, room_abbr}: CSVRow): string {
 
-  const id = defineUUID(type_abbr, room_abbr, area);
+  const haType   = "switch."
+  const id       = haType+defineUUID(type_abbr, room_abbr, area);
+  const deviceId = defineUUID(room, type, area);
 
   //register
-  DMX && addDmx(id, parseInt(DMX));
+  DMX && addDmx(haType+deviceId, parseInt(DMX));
 
   return template({
-    deviceId: defineUUID(room, type, area),
-    iconOFF : type === "suspension" ? "ceiling-light-outline": "toggle-switch-variant-off",
-    iconON  : type === "suspension" ? "ceiling-light"        : "toggle-switch-variant",
+    deviceId,
+    iconOFF: type === "suspension" ? "ceiling-light-outline": "toggle-switch-variant-off",
+    iconON : type === "suspension" ? "ceiling-light"        : "toggle-switch-variant",
     id,
-    name : name ?? "",
+    name: name ?? "",
     uuid: defineUUID(type, room, area)
   });
 }
@@ -28,13 +30,13 @@ function template({deviceId, iconOFF, iconON, id, name, uuid}:{[key:string]:stri
       turn_on:
         service: switch.toggle
         target:
-          entity_id: switch.${id}
+          entity_id: ${id}
       turn_off:
         service: switch.toggle
         target:
-          entity_id: switch.${id}
+          entity_id: ${id}
       icon_template: >-
-        {% if states('switch.${id}', 'on') %}
+        {% if states('${id}', 'on') %}
           mdi:${iconON}
         {% else %}
           mdi:${iconOFF}
