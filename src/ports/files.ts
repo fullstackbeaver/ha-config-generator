@@ -56,7 +56,7 @@ export async function convertCSV(filePath: string): Promise<CSVRow[]> {
       .split(",");
 
     if (titles.length === 0) {
-      titles = row; //.map(normalizeString);
+      titles = row;
       continue;
     }
 

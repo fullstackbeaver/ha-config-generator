@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "final-build": "rollup -c && rimraf ./bin/dist",
-    "final-build-and-run":"npm run final-build && node ha-config-generator.js",
-    "build-dev":"./scripts/dev-build.sh",
+    "final-build-and-run": "npm run final-build && node ha-config-generator.js",
+    "build": "./scripts/dev-build.sh",
     "eslint": "npx eslint ./src --fix",
     "test": "./scripts/tests.sh"
   },

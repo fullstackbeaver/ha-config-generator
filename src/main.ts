@@ -6,7 +6,8 @@ import      { generateMqttConfig }                                        from "
 
 (async () => {
   try {
-    const files        = readFilesInFolder(process.cwd() + "/csv");
+    const files = readFilesInFolder(process.cwd() + "/csv")
+      .filter(file => file.endsWith(".csv"));
     const transcribers = await importTemplates();
     let   fileContent;
 
