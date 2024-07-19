@@ -22,7 +22,7 @@ export function addMqtt(type: string, template: string) {
  *
  * @return {void} This function does not return a value.
  */
-export function generateMqttConfig(){mqttJson
+export function generateMqttConfig(){
   if( Object.keys(mqttJson).length === 0) return;
   writeFile("mqtt", Object.entries(mqttJson).reduce((acc, [key, value]) => acc + `${key}:\n${value}\n`, ""));
 }

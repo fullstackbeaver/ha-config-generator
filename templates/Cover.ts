@@ -13,13 +13,13 @@ import      { defineUUID }  from "../src/core/csvToHaConfig";
  * @param {CSVRow} room          - The room of the cover
  * @param {CSVRow} type          - The type of the cover
  *
- * @return {string} The generated cover template
+ * @return {string|void} The generated cover template (if can generate)
  */
-export default function coverTemplate ({DMX_active, DMX_direction, area, name="", room, type}: CSVRow): string {
+export default function coverTemplate ({DMX_active, DMX_direction, area, name="", room, type}: CSVRow): string | void {
 
   if (!DMX_active || !DMX_direction) {
     console.error("Cover should have both DMX_direction address and DMX_active address");
-    return "";
+    return;
   }
 
   const deviceId = defineUUID(room, type, area);

@@ -1,4 +1,3 @@
-// import commonjs   from '@rollup/plugin-commonjs';
 import resolve    from '@rollup/plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
 import typescript from '@rollup/plugin-typescript';
@@ -11,9 +10,8 @@ export default {
   },
   plugins: [
     resolve(),
-    // commonjs(),
     typescript(),
-    terser() // Minify the bundle
+    terser()
   ],
   external: id => /node_modules/.test(id), // Mark dependencies in node_modules as external
 };
