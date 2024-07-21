@@ -1,38 +1,37 @@
-import type { CSVRow }     from "../src/core/csvAndHa.types";
-import      { addDmx }     from "../src/core/dmx";
-import      { defineUUID } from "../src/core/csvToHaConfig";
+import type { CSVRow }            from "../src/core/csvAndHa.types";
+import      { addDmx }            from "../src/core/dmx";
+import      { addOrUpdateEntity } from "../src/core/entity";
+import      { defineUUID }        from "../src/core/csvToHaConfig";
+import      { normalizeString }   from "../src/helpers/string";
 
 /**
  * Generates a light template based on the provided parameters.
  *
- * @param {CSVRow} params           - The parameters for generating the light template.
- * @param {string} params.DMX       - The DMX value for the light.
- * @param {string} params.area      - The area of the light.
- * @param {string} params.max       - The maximum value for the light.
- * @param {string} params.name      - The name of the light.
- * @param {string} params.room      - The room of the light.
- * @param {string} params.room_abbr - The abbreviated name of the room.
- * @param {string} params.type      - The type of the light.
- * @param {string} params.type_abbr - The abbreviated type of the light.
+ * @param {CSVRow} params      - The parameters for generating the light template.
+ * @param {string} params.dmx  - The dmx value for the light.
+ * @param {string} params.area - The area of the light.
+ * @param {string} params.max  - The maximum value for the light.
+ * @param {string} params.name - The name of the light.
+ * @param {string} params.room - The room of the light.
+ * @param {string} params.type - The type of the light.
  *
  * @return {string} The generated light template.
  */
-export default function lightTemplate ({DMX, area, max, name, room, room_abbr, type, type_abbr}: CSVRow): string {
+export default function lightTemplate ({ dmx, area, max, name, protocol, room, type }: CSVRow): string {
 
   const deviceId = defineUUID(room, type, area);
-  const id       = defineUUID(type_abbr, room_abbr, area);
+  const id       = defineUUID(normalizeString(type), normalizeString(room), area);
 
   //register
-  DMX && addDmx("light."+deviceId, parseInt(DMX), max ? parseInt(max) : 0);
+  addOrUpdateEntity("light."+deviceId, protocol, addDmx(dmx ? parseInt(dmx) : 0, max ? parseInt(max) : 0))
 
   return template({
     deviceId,
     id,
     name: name ?? "",
-    uuid : defineUUID(type, room, area)
+    uuid: defineUUID(type, room, area)
   });
 }
-
 
 /**
  * Generates a template based on the provided parameters.
@@ -44,7 +43,7 @@ export default function lightTemplate ({DMX, area, max, name, room, room_abbr, t
  *
  * @return {string} The generated template.
  */
-function template({deviceId, id, name, uuid}:{[key:string]:string}) {
+function template({ deviceId, id, name, uuid }:{[key:string]:string}) {
   // /!\ BE AWARE of need tabulations in the template to respect yaml specifications
   return `
     ${deviceId}:

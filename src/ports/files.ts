@@ -13,12 +13,10 @@ const { configExportFolder, sourceCSV, sourceTemplates } = await readJsonFile("s
  *
  * @return {void}
  */
-export function writeFile(fileName: string, data: string | object): void {
+export function writeFile(fileName: string, data: string): void {
   const folder = join(process.cwd(), configExportFolder);
   !existsSync(folder) && mkdirSync(folder);
-  typeof data !== "string"
-    ? writeFileSync(join(process.cwd(), configExportFolder, fileName.toLowerCase()+".json"), JSON.stringify(data, null, 2))
-    : writeFileSync(join(process.cwd(), configExportFolder, fileName.toLowerCase()+".yaml"), data);
+  writeFileSync(join(process.cwd(), configExportFolder, fileName.toLowerCase()), data);
 }
 
 /**
@@ -56,7 +54,7 @@ export async function convertCSV(filePath: string): Promise<CSVRow[]> {
       .split(",");
 
     if (titles.length === 0) {
-      titles = row;
+      titles = row.map(word => word.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase()));
       continue;
     }
 

@@ -1,7 +1,7 @@
 import      { convertCSV, importTemplates, readFilesInFolder, writeFile } from "./ports/files";
 import      { csvToHaConfig, extractTypeFromCsvFileName, fileHeader }     from "./core/csvToHaConfig";
 import type { TranscribeFunction }                                        from "./core/csvAndHa.types";
-import      { generateDmxConfig }                                         from "./core/dmx";
+import      { generateEntitiesConfig }                                    from "./core/entity";
 import      { generateMqttConfig }                                        from "./core/mqtt";
 
 (async () => {
@@ -21,10 +21,10 @@ import      { generateMqttConfig }                                        from "
         return acc + csvToHaConfig(row, type, transcribers[type] as TranscribeFunction);
       }, "");
 
-      fileContent && writeFile(type, fileHeader(type) + fileContent);
+      fileContent && writeFile(type+".yaml", fileHeader(type) + fileContent);
     }
-    generateDmxConfig();
-    generateMqttConfig();
+    generateEntitiesConfig();  // make entities.ts
+    generateMqttConfig();      // make mqtt.yaml if needed
   } catch (error) {
     console.error(error);
   }

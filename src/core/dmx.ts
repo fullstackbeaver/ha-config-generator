@@ -1,47 +1,45 @@
-import { writeFile } from "../ports/files";
-
-type DmxCover = {
-  [dmxAddress:string]:boolean
+export type DmxEntry = {
+  dmxActive   ?: number
+  dmxAddress  ?: number
+  dmxDirection?: number
+  max         ?: number
+  output      ?: string
 }
 
-type DmxEntry = {
-  DMX_address?: number
-  max        ?: number
-  DMX_cover  ?: DmxCover
+const defaultDMX = {
+  output: "dmx",
 }
-const dmxJson = {} as {[key:string]:DmxEntry};
 
 /**
- * Updates the DMX configuration by adding a new DMX entry with the provided ID and DMX address.
+ * Updates the dmx configuration by adding a new dmx entry with the provided ID and dmx address.
  *
- * @param {string} id - The unique identifier for the DMX entry.
- * @param {number} dmxAddress - The DMX address for the DMX entry.
- * @param {number} [max] - The maximum value for the DMX entry (optional).
+ * @param {string} id         - The unique identifier for the dmx entry.
+ * @param {number} dmxAddress - The dmx address for the dmx entry.
+ * @param {number} [max]      - The maximum value for the dmx entry (optional).
  *
- * @return {void}
+ * @return {DmxEntry}
  */
-export function addDmx(id:string, dmxAddress:number, max?:number) {
-  dmxJson[id] = {
-    DMX_address: dmxAddress
+export function addDmx(dmxAddress:number, max?:number):DmxEntry {
+  const dmx:DmxEntry = {
+    ...defaultDMX,
+    dmxAddress: dmxAddress
   };
-  if (max) dmxJson[id].max = max;
+  if (max) dmx.max = max;
+  return dmx;
 }
 
 /**
- * Updates the DMX configuration file if there are DMX entries available.
+ * Updates the dmx configuration by adding a new dmx cover entry with the provided ID and cover data.
  *
- * @return {void} No return value.
- */
-export function generateDmxConfig() {
-  Object.keys(dmxJson).length > 0 && writeFile("dmx", dmxJson);
-}
-
-/**
- * Updates the DMX configuration by adding a new DMX cover entry with the provided ID and cover data.
+ * @param {number} active    - The active value for the dmx cover entry.
+ * @param {number} direction - The direction value for the dmx cover entry.
  *
- * @param {string} id - The unique identifier for the DMX cover entry.
- * @param {DmxCover} DMX_cover - The cover data for the DMX cover entry.
+ * @returns {DmxEntry} The updated dmx cover entry.
  */
-export function addDmxCover(id:string, DMX_cover:DmxCover) {
-  dmxJson[id] = { DMX_cover };
+export function addDmxCover( active:number, direction:number):DmxEntry {
+  return {
+    dmxActive   : active,
+    dmxDirection: direction,
+    ...defaultDMX
+  };
 }

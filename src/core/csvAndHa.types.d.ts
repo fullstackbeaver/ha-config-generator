@@ -1,16 +1,15 @@
-export type TranscribeFunction = (args: CSVRow) => string
+export type TranscribeFunction = (args: CSVRow) => string // eslint-disable-line
 
 export interface CSVRow {
-  DMX          ?: string
-  DMX_active   ?: string
-  DMX_direction?: string
-  area         ?: string
-  max          ?: string
-  name         ?: string
-  room         ?: string
-  room_abbr    ?: string
-  type          : string
-  type_abbr     : string
+  dmx         ?: string
+  dmxActive   ?: string
+  dmxDirection?: string
+  area        ?: string
+  max         ?: string
+  name        ?: string
+  protocol     : string  // "WS" | "MQTT"
+  room        ?: string
+  type         : string
 }
 
 export type Transcribers = {

@@ -1,40 +1,44 @@
-import type { CSVRow }      from "../src/core/csvAndHa.types";
-import      { addDmxCover } from "../src/core/dmx";
-import      { addMqtt }     from "../src/core/mqtt";
-import      { defineUUID }  from "../src/core/csvToHaConfig";
+import type { CSVRow }            from "../src/core/csvAndHa.types";
+import      { addDmxCover }       from "../src/core/dmx";
+import      { addOrUpdateEntity } from "../src/core/entity";
+import      { addToMqttYaml }     from "../src/core/mqtt";
+import      { defineUUID }        from "../src/core/csvToHaConfig";
 
 /**
  * Generates a template for a cover based on the provided parameters.
  *
- * @param {CSVRow} DMX_active    - The DMX active address for the cover
- * @param {CSVRow} DMX_direction - The DMX direction address for the cover
- * @param {CSVRow} area          - The area of the cover
- * @param {string} [name=""]     - The name of the cover (optional)
- * @param {CSVRow} room          - The room of the cover
- * @param {CSVRow} type          - The type of the cover
+ * @param {CSVRow} dmxActive    - The dmx active address for the cover
+ * @param {string} dmxDirection - The dmx direction address for the cover
+ * @param {string} area         - The area of the cover
+ * @param {string} [name=""]    - The name of the cover (optional)
+ * @param {string} room         - The room of the cover
+ * @param {string} type         - The type of the cover
  *
  * @return {string|void} The generated cover template (if can generate)
  */
-export default function coverTemplate ({DMX_active, DMX_direction, area, name="", room, type}: CSVRow): string | void {
+export default function coverTemplate ({ dmxActive, dmxDirection, area, name="", room, type }: CSVRow): string | void {
 
-  if (!DMX_active || !DMX_direction) {
-    console.error("Cover should have both DMX_direction address and DMX_active address");
+  if (!dmxActive || !dmxDirection) {
+    console.error("Cover should have both dmxDirection address and dmxActive address");
     return;
   }
 
   const deviceId = defineUUID(room, type, area);
   const uuid     = defineUUID(type, room, area);
 
-  //register DMX
-  addDmxCover("script.open_" + deviceId, { [DMX_direction]: false, [DMX_active]: true  }); // TODO reprendre
-  addDmxCover("script.close_"+ deviceId, { [DMX_direction]: true,  [DMX_active]: true  }); // TODO reprendre
-  addDmxCover("script.stop_" + deviceId, { [DMX_direction]: false, [DMX_active]: false }); // TODO reprendre
-  addDmxCover("cover."       + deviceId, { [DMX_direction]: false, [DMX_active]: false }); // TODO reprendre
+  //register dmx
+  addOrUpdateEntity( "cover."+deviceId, "mqtt", {
+    ...addDmxCover( parseInt(dmxActive), parseInt(dmxDirection) ),
+    mqttTopics: [
+      "homeassistant/cover/"+uuid+"/state",
+      "homeassistant/cover/"+uuid+"/set-position"
+    ]
+  } );
 
   //add to mqtt template builder
-  addMqtt( "cover", mqttTemplate( name, uuid ) );
+  addToMqttYaml( "cover", mqttTemplate( name, uuid ) );
 
-  return "";
+  return ""; //we will not make a cover.yaml
 }
 
 /**

@@ -47,7 +47,9 @@ node ha-config-generator.js
 
 On each template modification or update on CSV file, you need to make once again a build an run generator.
 
-## Use Generated Configuration Files:
+If you add columns inside excel file, you will need to complete src/core/csvAndHa.types.d.ts with new adjustments.
+
+## Use Generated Configuration Files
 Integrate the generated configuration files into your Home Assistant setup.
 Enjoy the enhanced interactions and automation capabilities.
 SonarCloud Results
@@ -71,5 +73,8 @@ Contributions to this project are highly appreciated. Feel free to fork the repo
 
 ### unit tests
 Unit tests are not implemented yet and will come in comming commits.
+
+### documentation
+No functional or technical documentation or wiki in fact actually only commented code based on JSdoc
 
 Happy Home Automation!

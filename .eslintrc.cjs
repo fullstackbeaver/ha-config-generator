@@ -11,9 +11,6 @@ module.exports = {
     Atomics          : "readonly",
     SharedArrayBuffer: "readonly",
   },
-  languageOptions: {
-    ecmaVersion: "latest"
-  },
   overrides: [
     {
       "files": ["*.d.ts"],
