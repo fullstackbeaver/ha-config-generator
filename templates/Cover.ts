@@ -11,12 +11,13 @@ import      { defineUUID }        from "../src/core/csvToHaConfig";
  * @param {string} dmxDirection - The dmx direction address for the cover
  * @param {string} area         - The area of the cover
  * @param {string} [name=""]    - The name of the cover (optional)
+ * @param {string} retains      - The retains value for the cover (MQTT capability)
  * @param {string} room         - The room of the cover
  * @param {string} type         - The type of the cover
  *
  * @return {string|void} The generated cover template (if can generate)
  */
-export default function coverTemplate ({ dmxActive, dmxDirection, area, name="", room, type }: CSVRow): string | void {
+export default function coverTemplate ({ dmxActive, dmxDirection, area, name="", retains, room, type }: CSVRow): string | void {
 
   if (!dmxActive || !dmxDirection) {
     console.error("Cover should have both dmxDirection address and dmxActive address");
@@ -29,7 +30,8 @@ export default function coverTemplate ({ dmxActive, dmxDirection, area, name="",
   //register dmx
   addOrUpdateEntity( "cover."+deviceId, "mqtt", {
     ...addDmxCover( parseInt(dmxActive), parseInt(dmxDirection) ),
-    mqttTopics: [
+    mqttRetains: Boolean(retains),
+    mqttTopics : [
       "homeassistant/cover/"+uuid+"/state",
       "homeassistant/cover/"+uuid+"/set-position"
     ]

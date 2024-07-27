@@ -8,6 +8,7 @@ export interface CSVRow {
   max         ?: string
   name        ?: string
   protocol     : string  // "WS" | "MQTT"
+  retains     ?: string
   room        ?: string
   type         : string
 }
