@@ -33,7 +33,8 @@ export default function coverTemplate ({ dmxActive, dmxDirection, area, name="",
     mqttRetains: Boolean(retains),
     mqttTopics : [
       "homeassistant/cover/"+uuid+"/state",
-      "homeassistant/cover/"+uuid+"/set-position"
+      "homeassistant/cover/"+uuid+"/set-position",
+      "homeassistant/cover/"+uuid+"/command"
     ]
   } );
 
