@@ -30,6 +30,7 @@ export default function coverTemplate ({ dmxActive, dmxDirection, area, name="",
   //register dmx
   addOrUpdateEntity( "cover."+deviceId, "mqtt", {
     ...addDmxCover( parseInt(dmxActive), parseInt(dmxDirection) ),
+    id         : deviceId,
     mqttRetains: Boolean(retains),
     mqttTopics : [
       "homeassistant/cover/"+uuid+"/state",
